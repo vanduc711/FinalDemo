@@ -58,7 +58,25 @@ public class SimpleStorage extends Contract {
     ;
 
     //new function
+    public Flowable<ValueDeletedEventResponse> valueDeletedEventFlowableWithBlockRange(BigInteger fromBlock, BigInteger toBlock) {
+        EthFilter filter = new EthFilter(
+                DefaultBlockParameter.valueOf(fromBlock),
+                DefaultBlockParameter.valueOf(toBlock),
+                getContractAddress()
+        );
+        filter.addSingleTopic(EventEncoder.encode(VALUEDELETED_EVENT));
+        return valueDeletedEventFlowable(filter);
+    }
 
+    public Flowable<ValueUpdatedEventResponse> valueUpdatedEventFlowableWithBlockRange(BigInteger fromBlock, BigInteger toBlock) {
+        EthFilter filter = new EthFilter(
+                DefaultBlockParameter.valueOf(fromBlock),
+                DefaultBlockParameter.valueOf(toBlock),
+                getContractAddress()
+        );
+        filter.addSingleTopic(EventEncoder.encode(VALUEUPDATED_EVENT));
+        return valueUpdatedEventFlowable(filter);
+    }
 
     @Deprecated
     protected SimpleStorage(String contractAddress, Web3j web3j, Credentials credentials, BigInteger gasPrice, BigInteger gasLimit) {
@@ -76,6 +94,20 @@ public class SimpleStorage extends Contract {
 
     protected SimpleStorage(String contractAddress, Web3j web3j, TransactionManager transactionManager, ContractGasProvider contractGasProvider) {
         super(BINARY, contractAddress, web3j, transactionManager, contractGasProvider);
+    }
+
+    public static class ValueDeletedEventResponse extends BaseEventResponse {
+        public BigInteger id;
+
+        public String deleter;
+    }
+
+    public static class ValueUpdatedEventResponse extends BaseEventResponse {
+        public BigInteger id;
+
+        public String creator;
+
+        public BigInteger newValue;
     }
 
     public static List<ValueDeletedEventResponse> getValueDeletedEvents(TransactionReceipt transactionReceipt) {
@@ -168,7 +200,7 @@ public class SimpleStorage extends Contract {
                 });
     }
 
-    public RemoteFunctionCall<TransactionReceipt> remove(BigInteger id) {
+    public RemoteFunctionCall<TransactionReceipt> remove(int id) {
         final Function function = new Function(
                 FUNC_REMOVE, 
                 Arrays.<Type>asList(new org.web3j.abi.datatypes.generated.Uint256(id)), 
@@ -176,7 +208,7 @@ public class SimpleStorage extends Contract {
         return executeRemoteCallTransaction(function);
     }
 
-    public RemoteFunctionCall<TransactionReceipt> update(BigInteger id, BigInteger newData) {
+    public RemoteFunctionCall<TransactionReceipt> update(int id, BigInteger newData) {
         final Function function = new Function(
                 FUNC_UPDATE, 
                 Arrays.<Type>asList(new org.web3j.abi.datatypes.generated.Uint256(id), 
@@ -219,19 +251,5 @@ public class SimpleStorage extends Contract {
     @Deprecated
     public static RemoteCall<SimpleStorage> deploy(Web3j web3j, TransactionManager transactionManager, BigInteger gasPrice, BigInteger gasLimit) {
         return deployRemoteCall(SimpleStorage.class, web3j, transactionManager, gasPrice, gasLimit, BINARY, "");
-    }
-
-    public static class ValueDeletedEventResponse extends BaseEventResponse {
-        public BigInteger id;
-
-        public String deleter;
-    }
-
-    public static class ValueUpdatedEventResponse extends BaseEventResponse {
-        public BigInteger id;
-
-        public String creator;
-
-        public BigInteger newValue;
     }
 }
