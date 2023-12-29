@@ -8,6 +8,7 @@ import java.util.Objects;
 public interface JwtService {
 
     String generateRefreshToken(Map<String, Objects> extractClaims, UserDetails userDetails);
+
     String extractUserName(String token);
 
     String generateToken(UserDetails userDetails);

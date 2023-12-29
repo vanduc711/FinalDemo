@@ -11,7 +11,9 @@ import java.io.UnsupportedEncodingException;
 
 public interface AuthenticationService {
     JwtAuthenticationResponse refreshToken(RefreshTokenRequest refreshTokenRequest);
+
     JwtAuthenticationResponse signin(SignInRequest signInRequest);
-    User signUp(SignUpRequest signUpRequest, String siteURL) throws MessagingException, UnsupportedEncodingException ;
+
+    User signUp(SignUpRequest signUpRequest, String siteURL) throws MessagingException, UnsupportedEncodingException;
 
 }

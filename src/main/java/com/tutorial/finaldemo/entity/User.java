@@ -33,9 +33,9 @@ public class User implements UserDetails {
     @Column(name = "password")
     private String password;
 
-    @ManyToMany(fetch = FetchType.EAGER , cascade = CascadeType.REFRESH)
-    @JoinTable(name = "user_role" , joinColumns = @JoinColumn(name = "user_id" , referencedColumnName = "id"),
-            inverseJoinColumns = @JoinColumn(name = "role_id" , referencedColumnName =  "id"))
+    @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.REFRESH)
+    @JoinTable(name = "user_role", joinColumns = @JoinColumn(name = "user_id", referencedColumnName = "id"),
+            inverseJoinColumns = @JoinColumn(name = "role_id", referencedColumnName = "id"))
 
     @Column(name = "Role")
     private Set<Role> role;
@@ -43,7 +43,8 @@ public class User implements UserDetails {
     private String verificationCode;
 
     private boolean verified;
-
+    @Column(name = "registration_time")
+    private LocalDateTime registrationTime;
 
     public boolean getVerified() {
         return verified;
@@ -52,9 +53,6 @@ public class User implements UserDetails {
     public void setVerified(boolean verified) {
         this.verified = verified;
     }
-
-    @Column(name = "registration_time")
-    private LocalDateTime registrationTime;
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {

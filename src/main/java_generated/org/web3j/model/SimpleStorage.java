@@ -1,6 +1,14 @@
-package com.tutorial.finaldemo.contract;
+package org.web3j.model;
 
 import io.reactivex.Flowable;
+
+import java.math.BigInteger;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
+import java.util.concurrent.Callable;
+
 import org.web3j.abi.EventEncoder;
 import org.web3j.abi.TypeReference;
 import org.web3j.abi.datatypes.Address;
@@ -21,13 +29,6 @@ import org.web3j.tuples.generated.Tuple2;
 import org.web3j.tx.Contract;
 import org.web3j.tx.TransactionManager;
 import org.web3j.tx.gas.ContractGasProvider;
-
-import java.math.BigInteger;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
-import java.util.concurrent.Callable;
 
 /**
  * <p>Auto generated code.
@@ -83,9 +84,9 @@ public class SimpleStorage extends Contract {
     }
 
     public static List<ValueDeletedEventResponse> getValueDeletedEvents(TransactionReceipt transactionReceipt) {
-        List<EventValuesWithLog> valueList = staticExtractEventParametersWithLog(VALUEDELETED_EVENT, transactionReceipt);
+        List<Contract.EventValuesWithLog> valueList = staticExtractEventParametersWithLog(VALUEDELETED_EVENT, transactionReceipt);
         ArrayList<ValueDeletedEventResponse> responses = new ArrayList<ValueDeletedEventResponse>(valueList.size());
-        for (EventValuesWithLog eventValues : valueList) {
+        for (Contract.EventValuesWithLog eventValues : valueList) {
             ValueDeletedEventResponse typedResponse = new ValueDeletedEventResponse();
             typedResponse.log = eventValues.getLog();
             typedResponse.id = (BigInteger) eventValues.getIndexedValues().get(0).getValue();
@@ -96,7 +97,7 @@ public class SimpleStorage extends Contract {
     }
 
     public static ValueDeletedEventResponse getValueDeletedEventFromLog(Log log) {
-        EventValuesWithLog eventValues = staticExtractEventParametersWithLog(VALUEDELETED_EVENT, log);
+        Contract.EventValuesWithLog eventValues = staticExtractEventParametersWithLog(VALUEDELETED_EVENT, log);
         ValueDeletedEventResponse typedResponse = new ValueDeletedEventResponse();
         typedResponse.log = log;
         typedResponse.id = (BigInteger) eventValues.getIndexedValues().get(0).getValue();
@@ -105,9 +106,9 @@ public class SimpleStorage extends Contract {
     }
 
     public static List<ValueUpdatedEventResponse> getValueUpdatedEvents(TransactionReceipt transactionReceipt) {
-        List<EventValuesWithLog> valueList = staticExtractEventParametersWithLog(VALUEUPDATED_EVENT, transactionReceipt);
+        List<Contract.EventValuesWithLog> valueList = staticExtractEventParametersWithLog(VALUEUPDATED_EVENT, transactionReceipt);
         ArrayList<ValueUpdatedEventResponse> responses = new ArrayList<ValueUpdatedEventResponse>(valueList.size());
-        for (EventValuesWithLog eventValues : valueList) {
+        for (Contract.EventValuesWithLog eventValues : valueList) {
             ValueUpdatedEventResponse typedResponse = new ValueUpdatedEventResponse();
             typedResponse.log = eventValues.getLog();
             typedResponse.id = (BigInteger) eventValues.getIndexedValues().get(0).getValue();
@@ -120,7 +121,7 @@ public class SimpleStorage extends Contract {
     }
 
     public static ValueUpdatedEventResponse getValueUpdatedEventFromLog(Log log) {
-        EventValuesWithLog eventValues = staticExtractEventParametersWithLog(VALUEUPDATED_EVENT, log);
+        Contract.EventValuesWithLog eventValues = staticExtractEventParametersWithLog(VALUEUPDATED_EVENT, log);
         ValueUpdatedEventResponse typedResponse = new ValueUpdatedEventResponse();
         typedResponse.log = log;
         typedResponse.id = (BigInteger) eventValues.getIndexedValues().get(0).getValue();
@@ -189,15 +190,15 @@ public class SimpleStorage extends Contract {
     public RemoteFunctionCall<TransactionReceipt> create(BigInteger newData, String contractAddress) {
         final Function function = new Function(
                 FUNC_CREATE,
-                Arrays.<Type>asList(new Uint256(newData),
-                        new Address(160, contractAddress)),
+                Arrays.<Type>asList(new org.web3j.abi.datatypes.generated.Uint256(newData),
+                        new org.web3j.abi.datatypes.Address(160, contractAddress)),
                 Collections.<TypeReference<?>>emptyList());
         return executeRemoteCallTransaction(function);
     }
 
     public RemoteFunctionCall<Tuple2<BigInteger, String>> get(BigInteger id) {
         final Function function = new Function(FUNC_GET,
-                Arrays.<Type>asList(new Uint256(id)),
+                Arrays.<Type>asList(new org.web3j.abi.datatypes.generated.Uint256(id)),
                 Arrays.<TypeReference<?>>asList(new TypeReference<Uint256>() {
                 }, new TypeReference<Address>() {
                 }));
@@ -216,7 +217,7 @@ public class SimpleStorage extends Contract {
     public RemoteFunctionCall<TransactionReceipt> remove(BigInteger id) {
         final Function function = new Function(
                 FUNC_REMOVE,
-                Arrays.<Type>asList(new Uint256(id)),
+                Arrays.<Type>asList(new org.web3j.abi.datatypes.generated.Uint256(id)),
                 Collections.<TypeReference<?>>emptyList());
         return executeRemoteCallTransaction(function);
     }
@@ -224,9 +225,9 @@ public class SimpleStorage extends Contract {
     public RemoteFunctionCall<TransactionReceipt> update(BigInteger id, BigInteger newData, String contractAddress) {
         final Function function = new Function(
                 FUNC_UPDATE,
-                Arrays.<Type>asList(new Uint256(id),
-                        new Uint256(newData),
-                        new Address(160, contractAddress)),
+                Arrays.<Type>asList(new org.web3j.abi.datatypes.generated.Uint256(id),
+                        new org.web3j.abi.datatypes.generated.Uint256(newData),
+                        new org.web3j.abi.datatypes.Address(160, contractAddress)),
                 Collections.<TypeReference<?>>emptyList());
         return executeRemoteCallTransaction(function);
     }

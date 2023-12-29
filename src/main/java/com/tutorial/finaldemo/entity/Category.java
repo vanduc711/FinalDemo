@@ -23,6 +23,7 @@ public class Category {
 
     @OneToMany(mappedBy = "category", fetch = FetchType.EAGER, cascade = CascadeType.PERSIST)
     private List<Product> products;
+
     public Category(int id) {
         this.id = id;
     }

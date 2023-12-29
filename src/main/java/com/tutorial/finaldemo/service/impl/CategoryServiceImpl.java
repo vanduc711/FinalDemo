@@ -23,11 +23,12 @@ public class CategoryServiceImpl implements CategoryService {
         return categoryReponsitory.findById(id).orElse(null);
     }
 
-    public Category saveCategory(Category category) { categoryReponsitory.save(category);
+    public Category saveCategory(Category category) {
+        categoryReponsitory.save(category);
         return category;
     }
 
-    public void deleteCategoryById(int id){
+    public void deleteCategoryById(int id) {
         categoryReponsitory.deleteById(id);
     }
 }

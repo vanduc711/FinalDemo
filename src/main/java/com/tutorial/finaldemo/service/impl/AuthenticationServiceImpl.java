@@ -35,31 +35,24 @@ import java.util.*;
 @RequiredArgsConstructor
 public class AuthenticationServiceImpl implements AuthenticationService {
 
+    private static final Logger logger = LoggerFactory.getLogger(MyTimerTask.class);
+    private final RoleReponsitory roleReponsitory;
+    private final UserReponsitory userReponsitory;
+    private final PasswordEncoder passwordEncoder;
+    private final JwtService jwtService;
+    private final AuthenticationManager authenticationManager;
     @Autowired
     private JobLauncher jobLauncher;
-
     @Autowired
     @Qualifier("sendEmail")
     private Job job;
-
-    private final RoleReponsitory roleReponsitory;
-
-    private final UserReponsitory userReponsitory;
-
-    private final PasswordEncoder passwordEncoder;
-
     @Autowired
     private JavaMailSender javaMailSender;
-
-    private final JwtService jwtService;
-
-    private final AuthenticationManager authenticationManager;
-
-    private static final Logger logger = LoggerFactory.getLogger(MyTimerTask.class);
 
     public static String generateRandomCode(int length) {
         return RandomStringUtils.random(length, true, true);
     }
+
     public User signUp(SignUpRequest signUpRequest, String siteURL) throws MessagingException, UnsupportedEncodingException {
         User user = new User();
         user.setEmail(signUpRequest.getEmail());
@@ -78,52 +71,31 @@ public class AuthenticationServiceImpl implements AuthenticationService {
         return userReponsitory.save(user);
     }
 
-    public class MyTimerTask extends TimerTask {
-        @Override
-        public void run() {
-            try {
-                JobParameters jobParameters = new JobParametersBuilder()
-                        .addLong("timestamp", System.currentTimeMillis())
-                        .toJobParameters();
-
-                JobExecution jobExecution = jobLauncher.run(job, jobParameters);
-
-                if (jobExecution.getStatus() == BatchStatus.COMPLETED) {
-                    logger.info("Batch Job Completed Successfully");
-                } else {
-                    logger.error("Batch Job Failed with Status: " + jobExecution.getStatus());
-                }
-            } catch (Exception e) {
-                logger.error("Error running batch job", e);
-            }
-            logger.info("Delayed task executed!");
-        }
-    }
-
     public void schedule() {
         Timer timer = new Timer();
         long delayInMillis = 30000;
         timer.schedule(new MyTimerTask(), delayInMillis);
     }
+
     public JwtAuthenticationResponse signin(SignInRequest signInRequest) {
-            authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(signInRequest.getEmail(), signInRequest.getPassword()));
+        authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(signInRequest.getEmail(), signInRequest.getPassword()));
 
-            var user = userReponsitory.findByEmail(signInRequest.getEmail()).orElseThrow(() -> new IllegalArgumentException("Invalid email or password"));
-            var jwt = jwtService.generateToken(user);
-            var refreshToken = jwtService.generateRefreshToken(new HashMap<>(), user);
+        var user = userReponsitory.findByEmail(signInRequest.getEmail()).orElseThrow(() -> new IllegalArgumentException("Invalid email or password"));
+        var jwt = jwtService.generateToken(user);
+        var refreshToken = jwtService.generateRefreshToken(new HashMap<>(), user);
 
-            JwtAuthenticationResponse jwtAuthenticationResponse = new JwtAuthenticationResponse();
+        JwtAuthenticationResponse jwtAuthenticationResponse = new JwtAuthenticationResponse();
 
-            jwtAuthenticationResponse.setToken(jwt);
-            jwtAuthenticationResponse.setRefreshToken(refreshToken);
-            return jwtAuthenticationResponse;
+        jwtAuthenticationResponse.setToken(jwt);
+        jwtAuthenticationResponse.setRefreshToken(refreshToken);
+        return jwtAuthenticationResponse;
     }
 
     public JwtAuthenticationResponse refreshToken(RefreshTokenRequest refreshTokenRequest) {
         String userEmail = jwtService.extractUserName(refreshTokenRequest.getToken());
         User user = userReponsitory.findByEmail(userEmail).orElseThrow();
 
-        if(jwtService.isTokenValid(refreshTokenRequest.getToken(), user)){
+        if (jwtService.isTokenValid(refreshTokenRequest.getToken(), user)) {
             var jwt = jwtService.generateToken(user);
 
             JwtAuthenticationResponse jwtAuthenticationResponse = new JwtAuthenticationResponse();
@@ -164,5 +136,27 @@ public class AuthenticationServiceImpl implements AuthenticationService {
 
         javaMailSender.send(message);
 
+    }
+
+    public class MyTimerTask extends TimerTask {
+        @Override
+        public void run() {
+            try {
+                JobParameters jobParameters = new JobParametersBuilder()
+                        .addLong("timestamp", System.currentTimeMillis())
+                        .toJobParameters();
+
+                JobExecution jobExecution = jobLauncher.run(job, jobParameters);
+
+                if (jobExecution.getStatus() == BatchStatus.COMPLETED) {
+                    logger.info("Batch Job Completed Successfully");
+                } else {
+                    logger.error("Batch Job Failed with Status: " + jobExecution.getStatus());
+                }
+            } catch (Exception e) {
+                logger.error("Error running batch job", e);
+            }
+            logger.info("Delayed task executed!");
+        }
     }
 }

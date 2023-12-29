@@ -5,6 +5,8 @@ import lombok.Data;
 @Data
 public class UpdateBlockRequest {
 
-    private int newValue;
+    private int newData;
+
+    private String contractAddress;
 
 }

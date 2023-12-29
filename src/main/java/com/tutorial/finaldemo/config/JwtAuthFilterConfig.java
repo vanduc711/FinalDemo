@@ -1,8 +1,8 @@
 package com.tutorial.finaldemo.config;
 
+import com.mysql.cj.util.StringUtils;
 import com.tutorial.finaldemo.service.JwtService;
 import com.tutorial.finaldemo.service.UserService;
-import com.mysql.cj.util.StringUtils;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -16,7 +16,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
-//OncePerRequestFilter đảm bảo rằng bộ lọc chỉ áp dụng cho 1 lần / yêu cầu
+
 @Component
 public class JwtAuthFilterConfig extends OncePerRequestFilter {
 

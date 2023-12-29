@@ -1,22 +1,22 @@
 package com.tutorial.finaldemo.service;
 
 import com.tutorial.finaldemo.contract.SimpleStorage;
-import com.tutorial.finaldemo.entity.Contract;
 
+import java.math.BigInteger;
 import java.util.List;
-import java.util.Optional;
 
 public interface ContractService {
 
-    List<SimpleStorage.ValueUpdatedEventResponse> createBlock(int value) throws Exception;
+    org.web3j.tx.Contract deployContract() throws Exception;
 
-    List<SimpleStorage.ValueUpdatedEventResponse> updateBlock(int id, int newValue) throws Exception;
+    //    void createEntry(BigInteger newData, String contractAddress) throws Exception;
+    String getContractAddress() throws Exception;
 
-    List<SimpleStorage.ValueDeletedEventResponse> removeBlock(int id) throws Exception;
+    SimpleStorage createEntry(BigInteger newData, String contractAddress) throws Exception;
 
-    Optional<Contract> getBlockById(int id);
+    SimpleStorage updateEntry(int id, int newData, String contractAddress) throws Exception;
 
-    void saveBlock(Contract contract);
-    void deleteBlock(int id);
+    SimpleStorage removeEntry(int id, String contractAddress) throws Exception;
 
+    List getEntry(int id, String contractAddress) throws Exception;
 }

@@ -62,11 +62,11 @@ public class UserVerificationBatchConfig {
                         user.getEmail(),
                         "Tài khoản của bạn đã bị xóa",
                         "Vtài khoản của bạn không được xác minh vòng 30 giây."
-                    );
-                    System.out.println("Email đã được gửi thành công cho người dùng: " + sendEmailNotification);
-                    userRepository.delete(user);
-                    System.out.println("Tài khoản của người dùng đã bị xóa: " + user.getEmail());
-                }
+                );
+                System.out.println("Email đã được gửi thành công cho người dùng: " + sendEmailNotification);
+                userRepository.delete(user);
+                System.out.println("Tài khoản của người dùng đã bị xóa: " + user.getEmail());
+            }
             return null;
         };
     }

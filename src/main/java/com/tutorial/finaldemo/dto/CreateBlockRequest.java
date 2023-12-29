@@ -4,5 +4,7 @@ import lombok.Data;
 
 @Data
 public class CreateBlockRequest {
-    private int value;
+    private int newData;
+
+    private String contractAddress;
 }

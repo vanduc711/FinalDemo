@@ -1,7 +1,6 @@
 package com.tutorial.finaldemo.service.impl;
 
 import com.tutorial.finaldemo.entity.User;
-import com.tutorial.finaldemo.reponsitory.UserReponsitory;
 import com.tutorial.finaldemo.service.EmailVerificationService;
 import jakarta.mail.MessagingException;
 import jakarta.mail.internet.MimeMessage;
@@ -14,9 +13,9 @@ import org.springframework.stereotype.Service;
 @Service
 public class EmailVerificationServiceImpl implements EmailVerificationService {
 
-
     @Autowired
     private JavaMailSender javaMailSender;
+
     @Async
     public User sendEmailNotification(String to, String subject, String content) {
         System.out.println("Sending deletion email to: " + to);
